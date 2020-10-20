@@ -1,0 +1,11 @@
+*.tar.gz
+*.zip
+__pycache__
+.DS_Store
+*.pyc
+venv
+env
+node_modules
+yarn.lock
+package-lock.json
+.gdb_history
