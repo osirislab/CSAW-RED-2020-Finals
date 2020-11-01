@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  traefik:
+    image: "localhost:5000/traefik:v2.3"
+    container_name: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "8268:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  
+  frontend:
+    image: "localhost:5000/frontend:latest"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Path(`/`) || PathPrefix(`/album`) || PathPrefix(`/static`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+  
+  resizer:
+    image: "localhost:5000/resizer:latest"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.resizer.rule=Path(`/resize`)"
+      - "traefik.http.routers.resizer.entrypoints=web"

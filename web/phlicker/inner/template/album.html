@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<!--
+	Story by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+        <title>{{ album.title }}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/static/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="divided">
+					<section class="wrapper style1 align-center">
+						<div class="inner">
+                            <h2>{{ album.title }}</h2>
+                            <p>{{ album.description }}</p>
+						</div>
+
+                        <div class="gallery style2 medium lightbox onscroll-fade-in">
+                            {% for photo in album.photos %}
+                            <article>
+                                <a href="{{ photo.url }}" class="image">
+                                    <img src="{{ url_for('resize', url=photo.url, h=300) }}" alt="{{ photo.description }}" />
+                                </a>
+                                <div class="caption">
+                                    <p>{{ photo.description }}</p>
+                                </div>
+                            </article>
+                            {% endfor %}
+                        </div>
+
+					</section>
+
+				<!-- Footer -->
+					<footer class="wrapper style1 align-center">
+						<div class="inner">
+							<p>&copy; CSAW 2020. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="/static/assets/js/jquery.min.js"></script>
+			<script src="/static/assets/js/jquery.scrollex.min.js"></script>
+			<script src="/static/assets/js/jquery.scrolly.min.js"></script>
+			<script src="/static/assets/js/browser.min.js"></script>
+			<script src="/static/assets/js/breakpoints.min.js"></script>
+			<script src="/static/assets/js/util.js"></script>
+			<script src="/static/assets/js/main.js"></script>
+
+	</body>
+</html>

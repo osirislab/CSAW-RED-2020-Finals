@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<!--
+	Story by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Phlicker</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/static/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="divided">
+                    {% for album in albums %}
+                    <section class="spotlight style1 content-align-left image-position-center onscroll-image-fade-in {{ 'content-left' if loop.index0 % 2 == 0 else 'content-right' }}">
+                        <div class="content">
+                            <a href="{{ url_for('album', album_id=album.id) }}">
+                                <h2>{{ album.title }}</h2>
+                                <p>{{ album.description }}</p>
+                            </a>
+                        </div>
+                        <div class="image">
+                            <a href="{{ url_for('album', album_id=album.id) }}">
+                                <img src="{{ url_for('resize', url=album.photos[0].url, h=200) }}" alt="" />
+                            </a>
+                        </div>
+					</section>
+                    {% endfor %}
+
+				<!-- Footer -->
+					<footer class="wrapper style1 align-center">
+						<div class="inner">
+							<p>&copy; CSAW 2020. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+						</div>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="/static/assets/js/jquery.min.js"></script>
+			<script src="/static/assets/js/jquery.scrollex.min.js"></script>
+			<script src="/static/assets/js/jquery.scrolly.min.js"></script>
+			<script src="/static/assets/js/browser.min.js"></script>
+			<script src="/static/assets/js/breakpoints.min.js"></script>
+			<script src="/static/assets/js/util.js"></script>
+			<script src="/static/assets/js/main.js"></script>
+
+	</body>
+</html>
