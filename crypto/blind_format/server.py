@@ -15,34 +15,52 @@ def hash(str):
 	return temp.hexdigest()
 
 def sign(data):
-	return hex( pow(int(data, 16), d, n) )[2:]
+	return hex( pow(int(data.encode("utf-8").hex(), 16), d, n) )[2:]
 
 def verify(data, sig):
-	return int(data, 16) == pow(int(sig, 16), e, n)
+	return int(data.encode("utf-8").hex(), 16) == pow(int(sig, 16), e, n)
 
 def main():
-	parts = sys.stdin.readline()[:-1].split(" ")
+	print("Casting Spells as a Service - CSaaS")
+	print("Unlimited spell slots with a 3-year subscription!\n")
 
-	try:
-		if parts[0] == "sign":
-			fmt = " ".join(parts[1:])
+	print("Sign your spell and then cast it\n")
 
-			if fmt.find("%") != -1 or fmt.find("hocus pocus") != -1:
+	print("sign <spell>")
+	print("cast <signature> <spell>\\\\")
+
+	while True:
+		parts = sys.stdin.readline()[:-1].split(" ")
+
+		try:
+			if parts[0] == "sign":
+				spell = " ".join(parts[1:])
+
+				if spell.find("hocus pocus") != -1:
+					raise Exception()
+
+				print("{}".format(sign(spell)))
+			elif parts[0] == "cast":
+				sig = parts[1]
+				spell = " ".join(parts[2:])
+
+				if not verify(spell, sig):
+					raise Exception()
+
+				if spell == "hocus pocus":
+					print("Something just appeared out of nowhere!")
+					with open("flag") as file:
+						print("".join(file.readlines()))
+				else:
+					print("You cast your spell! It does nothing. :(")
+			elif parts[0] in ["quit", "exit"]:
+				print("Vanishing!")
+				return
+			else:
 				raise Exception()
-
-			print("{}".format(sign(hash(fmt))), end = "")
-		elif parts[0] == "verify":
-			sig = parts[1]
-			fmt = " ".join(parts[2:])
-
-			if not verify(hash(fmt), sig):
-				raise Exception()
-
-			print("{}".format(fmt))
-		else:
-			raise Exception()
-	except:
-		print("%s", end = "")
+		except:
+			print("Incorrect amount of magic focus...")
+			print("...try again?")
 
 if __name__ == "__main__":
 	main()
