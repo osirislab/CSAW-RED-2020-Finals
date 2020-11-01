@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Hello</title>
+        <script src="/static/js/satscripts.js"></script>
+        <script>
+            var interval = setInterval(stepSatContact, 3000);
+            var interval2 = setInterval(dumpOutput, 1000);
+            var i3 = setInterval(countDownToEndOfContact, 1000);
+        </script>
+        <style>
+            div {
+                display: flex;
+            }
+        </style>
+
+    </head>
+    <body onload=initDB()>
+        <h1 id="test"> Messages for spacecraft {{ value }} </h1>
+        <div><h2>Time to LOS: </h2><h2 id="endOfTime"></h2></div>
+        <p id="output"> </p>
+    </body>
+</html>
