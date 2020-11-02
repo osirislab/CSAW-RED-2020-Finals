@@ -6,8 +6,9 @@
 #define TRUE 1
 #define FALSE 0
 #define MAXINTLENGTH 5
-#define NAMELENGTH 240
-#define SIGNATURELENGTH 16 // confirm length of signature
+#define NAMELENGTH 40
+#define INVOCATIONLENGTH 1200
+//#define SIGNATURELENGTH 16 // confirm length of signature
 
 _Bool invocation_registered = FALSE;
 _Bool name_registered = FALSE;
@@ -33,62 +34,58 @@ int getIntClean(){
     return atoi(input);
 }
 
-char * signInput(){
-    puts("Sign input\n");
-    return("AAAABBBBCCCCDDDD");
-}
+//char * signInput(){
+//    puts("Sign input\n");
+//    return("AAAABBBBCCCCDDDD");
+//}
 
-_Bool signatureIsValid(){
-    return TRUE;
-}
+//_Bool signatureIsValid(){
+//    return TRUE;
+//}
 
 void designateField(_Bool isSpellName, char* field){
     //char field[NAMELENGTH];
-    char signature[SIGNATURELENGTH];
-    puts("Enter the signature for your entry: ");
-    getInput(SIGNATURELENGTH, signature);
-    if (signatureIsValid(signature)){
-        if(isSpellName){
-            puts("Enter the name of the spell you wish to cast: ");
-        }else{
-            puts("Enter the words to be spoken when you cast the spell: ");
-        }
+    //char signature[SIGNATURELENGTH];
+    //puts("Enter the signature for your entry: ");
+    //getInput(SIGNATURELENGTH, signature);
+    if(isSpellName){
+        puts("Enter the name of the spell you wish to cast: ");
         getInput(NAMELENGTH, field);
-        if(isSpellName){
-        //    memcpy(spellname, field, NAMELENGTH);
-            name_registered = TRUE;
-        }else{
-            //memcpy(invocation, field, NAMELENGTH);
-            invocation_registered = TRUE;
-        }
+        name_registered=TRUE;
     }else{
-        puts("Magic field designation failed!\n");
-        exit(0);
+        puts("Enter the words to be spoken when you cast the spell: ");
+        getInput(INVOCATIONLENGTH, field);
+        invocation_registered=TRUE;
     }
+    //getInput(NAMELENGTH, field);
+    //if(isSpellName){
+    //    memcpy(spellname, field, NAMELENGTH);
+    //    name_registered = TRUE;
+    //}else{
+        //memcpy(invocation, field, NAMELENGTH);
+    //    invocation_registered = TRUE;
+    //}
+    return;
 }
 
 //void designateInvocation(){
 //    puts("Designate\n");
 //}
 
-void runChallenge(char * invocation, char * spellname){
+void runRitualCasting(char * invocation, char * spellname){
     puts("   What do you want to do?");
     puts("");
     puts("Options:");
-    puts("(1) Sign an input");
-    puts("(2) Designate the spell name");
-    puts("(3) Designate the spell invocation");
+    puts("(1) Designate the spell name");
+    puts("(2) Designate the spell invocation");
     printf("> ");
     fflush(stdout);
     int selection = getIntClean();
 
-    if(selection == 1){
-        signInput();
-    }
-    else if(selection ==2){
+    if(selection ==1){
         designateField(1, spellname); // register a spell name
     }
-    else if(selection == 3){
+    else if(selection == 2){
         designateField(0, invocation); // register an invocation
     }
     else if(selection == 1337){
@@ -123,26 +120,51 @@ void runChallenge(char * invocation, char * spellname){
 //    return;
 //}
 
-int main(int argc, char **argv){
-    setvbuf(stdout, NULL, _IONBF, 0);
-    char invocation[NAMELENGTH];
+int accessSpellbook(){
+    char invocation[INVOCATIONLENGTH];
     char spellname[NAMELENGTH];
     puts("*** Spellbook ***\n");
     puts("   You have encountered an intelligent spellbook");
     puts("that casts its own spells. Can you get it to give");
-    puts("you the flag? It\'s a smart spellbook, so it requires all its");
-    puts("spell invocations to be signed first to prevent any");
-    puts("hocus pocus.");
-    puts("   To cast a spell, get a proper RSA signature for both the");
-    puts("spell name and spell invocation. The spellbook will immediately");
-    puts("cast the spell once you have designate a spell name");
-    puts("and invocation with valid signatures.");
+    puts("you the flag?");
     puts("");
     fflush(stdout);
     while(1){
-        runChallenge(invocation, spellname);
+        runRitualCasting(invocation, spellname);
     }
     printf("\n");
+    return 0;
+}
+
+/*
+int accessRitualChamber(){
+    accessSpellbook();
+    return 0;
+}
+
+int accessPalace(){
+    accessRitualChamber();
+    return 0;
+}
+
+int accessCapitolCity(){
+    accessPalace();
+    return 0;
+}
+
+int accessFloatingContinent(){
+    accessCapitolCity();
+    return 0;
+}
+
+int accessPocketDimension(){
+    accessFloatingContinent();
+    return 0;
+}*/
+
+int main(int argc, char **argv){
+    setvbuf(stdout, NULL, _IONBF, 0);
+    accessSpellbook();
     return 0;
 }
 
