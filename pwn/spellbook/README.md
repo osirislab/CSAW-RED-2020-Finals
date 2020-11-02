@@ -16,6 +16,14 @@ Next is the issue of how to get control of the instruction pointer. The binary i
 
 An alternative approach would involve overwriting the `free_hook` pointer in `libc` with the address of the start of the program (`accessSpellBook`) to get multiple calls to print the format string vulnerability in the invocation buffer. That lets the user create the ROP chain another way, but still requires them to eventually overwrite the return address of `printf_positional`. I let them do plenty of writes from a large buffer storing the invocation, although that isn't strictly necessary and it could have been about half the size that it is for the challenge to be solvable. 
 
-Solving the challenge also requires users to be able to download the libc and then link it to the challenge locally when debugging, in order to get the correct offset for the return address of `printf_positional` for the challenge running on the server. For all these reasons I gave it 400 points.
+Solving the challenge also requires users to be able to download the libc and then link it to the challenge locally when debugging, in order to get the correct offset for the return address of `printf_positional` for the challenge running on the server. That's yet another non-trivial step. I used the `patchelf` tool (see comments at the end of 
+the solver script) and needed to download the linker which corresponds to the fingerprinted `libc` version. The reason 
+this is necessary is to calculate the correct offset from a leaked stack address to the return address from 
+`printf_positional` in the binary. 
 
-## Progress as of 11-2: solver working locally, testing it with the `libc` in the Docker container
+For all these reasons I gave it 400 points.
+
+During the competition, if people aren't getting the challenge after six hours then we can drop a hint that they 
+may need to debug the challenge locally while using a the libc version running on the server and its corresponding linker.
+
+## Progress as of 11-2: Everything works, just need to test it on CTFd. 
