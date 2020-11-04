@@ -1,5 +1,4 @@
 from gmpy2 import divm, mpz, mul, powmod
-import hashlib
 from pwn import remote
 import sys
 import time
@@ -13,16 +12,12 @@ server = remote(host, port)
 n = 151344532527925556350974757629285375760854276898058546405594026203997410437714722120318262940225090378982962568087555459772015725247304252516252133233201141501772358742227659485723099848701870054530883080763906512752831582408291010602491760336942824607523416310244169661388738172980663338461180475498980566447
 e = 65537
 
-def hash(str):
-	temp = hashlib.sha256()
-	temp.update(str.encode("utf-8"))
-	return temp.hexdigest()
-
 def encrypt(data):
-	return pow(int(data.encode("utf-8").hex(), 16), e, n)
+	return pow(int(data.hex(), 16), e, n)
 
 def try_sign(spell):
-	server.send(b"sign " + spell + b"\n")
+	print("sign " + spell.hex() + "\n")
+	server.send("sign " + spell.hex() + "\n")
 
 	line = server.recvuntil("\n").decode("utf-8")
 	if line.startswith("Incorrect"):
@@ -33,9 +28,10 @@ def try_sign(spell):
 	return line[:-2].encode("utf-8")
 
 def try_cast(spell, sig):
-	server.send(b" ".join([b"cast", sig, spell]) + b"\n")
+	server.send(" ".join(["cast", sig.hex(), spell.hex()]) + "\n")
 
 	line = server.recvuntil("\n").decode("utf-8")
+	print(line)
 	if line.startswith("Incorrect"):
 		server.recvuntil("\n")
 		return False
@@ -43,16 +39,17 @@ def try_cast(spell, sig):
 		return True
 
 	#strip off \r\n
-	return server.recvuntil("\n")[:-2].encode("utf-8")
+	return server.recvuntil("\n")[:-2]
 
 class UE(BaseException):
 	def __init__(self):
 		pass
 
 def main():
-	spell = "hocus"
+	spell = b"hocus pocus"
 
 	c = encrypt(spell)
+	c = int(spell.hex(), 16)
 	r = 1
 	d = 0
 	sig_c_prime = None 
@@ -82,12 +79,15 @@ def main():
 			d += 1
 		r += 1
 
-	sig = hex( divm(sig_c_prime, r, n) )
-	flag = try_cast(spell, sig.encode("utf-8")).decode("utf-8")
+	sig = hex( divm(sig_c_prime, r, n) )[2:]
+	print(bytes.fromhex(sig))
+	flag = try_cast(spell, bytes.fromhex(sig)).decode("utf-8")
 	print("flag:", flag)
 
 if __name__ == "__main__":
 	print(server.recvuntil("\\\\\r\n"))
 	try_str = b'hocus  pocus'
-	print(try_sign(try_str), try_cast(try_str, try_sign(try_str)))
+	print(try_sign(try_str))
+	print(try_sign(try_str).decode("utf-8"))
+	print(try_cast(try_str, bytes.fromhex("0" + try_sign(try_str).decode("utf-8"))))
 	main()

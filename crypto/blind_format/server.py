@@ -1,5 +1,4 @@
 from gmpy2 import divm, mpz, mul, powmod
-import hashlib
 import sys
 
 import SECRET
@@ -9,19 +8,14 @@ n = 1513445325279255563509747576292853757608542768980585464055940262039974104377
 e = 65537
 d = SECRET.d
 
-def hash(str):
-	temp = hashlib.sha256()
-	temp.update(str.encode("utf-8"))
-	return temp.hexdigest()
-
 def sign(data):
-	return hex( pow(int(data.encode("utf-8").hex(), 16), d, n) )[2:]
+	return pow(int(data.hex(), 16), d, n)
 
 def verify(data, sig):
-	return int(data.encode("utf-8").hex(), 16) == pow(int(sig, 16), e, n)
+	return int(data.hex(), 16) == pow(int(sig.hex(), 16), e, n)
 
 def main():
-	print("Casting Spells as a Service - CSaaS")
+	print("Hex Casting as a Service - HCaaS")
 	print("Unlimited spell slots with a 3-year subscription!\n")
 
 	print("Sign your spell and then cast it\n")
@@ -34,20 +28,20 @@ def main():
 
 		try:
 			if parts[0] == "sign":
-				spell = " ".join(parts[1:])
+				spell = bytes.fromhex(parts[1])
 
-				if spell.find("hocus pocus") != -1:
+				if spell.find(b"hocus pocus") != -1:
 					raise Exception()
 
-				print("{}".format(sign(spell)))
+				print("{}".format(hex(sign(spell))[2:]))
 			elif parts[0] == "cast":
-				sig = parts[1]
-				spell = " ".join(parts[2:])
+				sig = bytes.fromhex(parts[1])
+				spell = bytes.fromhex(parts[2])
 
 				if not verify(spell, sig):
 					raise Exception()
 
-				if spell == "hocus pocus":
+				if spell == b"hocus pocus":
 					print("Something just appeared out of nowhere!")
 					with open("flag") as file:
 						print("".join(file.readlines()))
@@ -59,8 +53,12 @@ def main():
 			else:
 				raise Exception()
 		except:
+			raise
 			print("Incorrect amount of magic focus...")
 			print("...try again?")
 
 if __name__ == "__main__":
+	test_str = b"thstrhtrh"
+	if not verify(test_str, bytes.fromhex(hex(sign(test_str))[2:])):
+		raise Exception()
 	main()
