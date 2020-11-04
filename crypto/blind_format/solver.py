@@ -9,14 +9,19 @@ port = 8779
 server = remote(host, port)
 
 #key material
-n = 151344532527925556350974757629285375760854276898058546405594026203997410437714722120318262940225090378982962568087555459772015725247304252516252133233201141501772358742227659485723099848701870054530883080763906512752831582408291010602491760336942824607523416310244169661388738172980663338461180475498980566447
+n = 104525132490556452593202847360958867443850727021139374664119771884926217842051539965479047872905144890766357397753662519890618428457072902974515214064289896674717388849969373481670774897894594962128470900125169816586277785525675183392237296768481956391496477386266086799764706674035243519651786099303959008271
 e = 65537
 
+def byte_to_int(str):
+	return int(str.hex(), 16)
+
+def hex_to_byte(hex):
+	return bytes.fromhex(("0" if len(hex) % 2 else "") + hex)
+
 def encrypt(data):
-	return pow(int(data.hex(), 16), e, n)
+	return pow(byte_to_int(data), e, n)
 
 def try_sign(spell):
-	print("sign " + spell.hex() + "\n")
 	server.send("sign " + spell.hex() + "\n")
 
 	line = server.recvuntil("\n").decode("utf-8")
@@ -31,7 +36,6 @@ def try_cast(spell, sig):
 	server.send(" ".join(["cast", sig.hex(), spell.hex()]) + "\n")
 
 	line = server.recvuntil("\n").decode("utf-8")
-	print(line)
 	if line.startswith("Incorrect"):
 		server.recvuntil("\n")
 		return False
@@ -48,27 +52,18 @@ class UE(BaseException):
 def main():
 	spell = b"hocus pocus"
 
-	c = encrypt(spell)
 	c = int(spell.hex(), 16)
 	r = 1
-	d = 0
 	sig_c_prime = None 
 
 	while sig_c_prime is None:
-		if not r % 100:
-			print(r, d)
-			print(sig_c_prime)
-
 		try:
 			c_prime = mul(c, powmod(r, e, n)) % n
-			print(0, hex(c_prime)[2:])
-			msg = bytes.fromhex(("0" if len(hex(c_prime)) % 2 else "") + hex(c_prime)[2:])
-			#print(1, msg)
+			msg = hex_to_byte(hex(c_prime)[2:])
 
-			if any([x in [ord("\0"), ord(" "), ord("\t"), ord("\r"), ord("\n")] for x in msg]):
+			if any([x in list(map(ord, [y for y in "\0 \t\r\n"])) for x in msg]):
 				raise UE()
 			resp = try_sign(msg)
-			#print(2, resp)
 
 			if resp is not None:
 				sig_c_prime = int(resp, 16)
@@ -76,18 +71,16 @@ def main():
 		except KeyboardInterrupt:
 			raise
 		except UE:
-			d += 1
+			pass
 		r += 1
 
 	sig = hex( divm(sig_c_prime, r, n) )[2:]
-	print(bytes.fromhex(sig))
-	flag = try_cast(spell, bytes.fromhex(sig)).decode("utf-8")
-	print("flag:", flag)
+	print("signature:", hex_to_byte(sig))
+	flag = try_cast(spell, hex_to_byte(sig))
+	print("FLAG:", flag)
 
 if __name__ == "__main__":
 	print(server.recvuntil("\\\\\r\n"))
-	try_str = b'hocus  pocus'
-	print(try_sign(try_str))
-	print(try_sign(try_str).decode("utf-8"))
-	print(try_cast(try_str, bytes.fromhex("0" + try_sign(try_str).decode("utf-8"))))
+	try_str = b"hocus  pocus"
+	assert(try_cast(try_str, hex_to_byte(try_sign(try_str).decode("utf-8"))))
 	main()

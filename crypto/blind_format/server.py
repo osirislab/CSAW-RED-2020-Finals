@@ -4,7 +4,7 @@ import sys
 import SECRET
 
 #key material
-n = 151344532527925556350974757629285375760854276898058546405594026203997410437714722120318262940225090378982962568087555459772015725247304252516252133233201141501772358742227659485723099848701870054530883080763906512752831582408291010602491760336942824607523416310244169661388738172980663338461180475498980566447
+n = 104525132490556452593202847360958867443850727021139374664119771884926217842051539965479047872905144890766357397753662519890618428457072902974515214064289896674717388849969373481670774897894594962128470900125169816586277785525675183392237296768481956391496477386266086799764706674035243519651786099303959008271
 e = 65537
 d = SECRET.d
 
@@ -21,7 +21,8 @@ def main():
 	print("Sign your spell and then cast it\n")
 
 	print("sign <spell>")
-	print("cast <signature> <spell>\\\\")
+	print("cast <signature> <spell>")
+	print("\\\\")
 
 	while True:
 		parts = sys.stdin.readline()[:-1].split(" ")
@@ -46,19 +47,18 @@ def main():
 					with open("flag") as file:
 						print("".join(file.readlines()))
 				else:
-					print("You cast your spell! It does nothing. :(")
+					print("You cast your spell! It does nothing :(")
 			elif parts[0] in ["quit", "exit"]:
 				print("Vanishing!")
 				return
 			else:
 				raise Exception()
 		except:
-			raise
 			print("Incorrect amount of magic focus...")
 			print("...try again?")
 
 if __name__ == "__main__":
-	test_str = b"thstrhtrh"
+	test_str = b"this is not the string you're looking for"
 	if not verify(test_str, bytes.fromhex(hex(sign(test_str))[2:])):
 		raise Exception()
 	main()
