@@ -22,3 +22,4 @@ with open("SECRET.py", "w") as file:
 	file.write("d = " + str(d))
 
 subprocess.call("vi -s auto_fill_pubkey.vim server.py".split(" "))
+subprocess.call("vi -s auto_fill_pubkey.vim solver.py".split(" "))
