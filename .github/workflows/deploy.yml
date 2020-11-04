@@ -1,0 +1,21 @@
+name: Autodeploy
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  deploy-red:
+    runs-on: ["self-hosted", "red-chal"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: build images
+        run: ctfdbot build red.chal.csaw.io .
+      - name: update ctfd
+        run: ctfdbot update red.chal.csaw.io .
+      - name: deploy containers
+        run: ctfdbot deploy red.chal.csaw.io
+        
