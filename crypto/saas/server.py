@@ -15,7 +15,7 @@ def verify(data, sig):
 	return int(data.hex(), 16) == pow(int(sig.hex(), 16), e, n)
 
 def main():
-	print("Hex Casting as a Service - HCaaS")
+	print("Spellcasting as a Service - SaaS")
 	print("Unlimited spell slots with a 3-year subscription!\n")
 
 	print("Sign your spell and then cast it\n")
