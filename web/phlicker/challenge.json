@@ -1,0 +1,10 @@
+{
+  "name": "Phlicker",
+  "category": "web",
+  "author": "kallsyms",
+  "description": "I see flame, phlickering once again... \n\n[http://{box}:{port}](http://{box}:{port})",
+  "points": 250,
+  "internal_port": 5000,
+  "box": "web.red.csaw.io",
+  "flag": "flag{this_is_a_flag}"
+}
