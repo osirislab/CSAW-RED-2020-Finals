@@ -1,0 +1,11 @@
+{
+    "name":"armorcheck",
+    "category":"pwn",
+    "author": "N4T_20",
+    "description":"Phishing is a problem these days, so we wrote a challenge that will check your chain mail for you. `nc {box} {port}`",
+    "flag":"flag{w4y_t0_7hr0w_d0wn_7h3_g4un7l3t}",
+    "points":150,
+    "files":["armorcheck"],
+    "box": "pwn.red.csaw.io",
+    "internal_port": 5000
+}
