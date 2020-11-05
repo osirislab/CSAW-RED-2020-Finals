@@ -2,6 +2,7 @@
 
 ## TODO:
 [] theming
+[] Docker
 
 ## Premise
 
