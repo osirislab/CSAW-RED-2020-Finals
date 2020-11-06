@@ -6,8 +6,7 @@ SECRET_KEY="uEWnxmVIamGhVaG4Zi6nfZMFMiEtax73"
 DOMAIN="red.chal.csaw.io:8268"
 
 docker run \
-    -it \
-    --rm \
+    -d \
     -v $(pwd)/inner:/opt/chal \
     -v /var/run/docker.sock:/var/run/docker.sock \
     tiangolo/docker-with-compose \
