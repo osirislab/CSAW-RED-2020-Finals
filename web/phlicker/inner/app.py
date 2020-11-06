@@ -40,6 +40,9 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+# TODO: user registration
+
+
 @app.route("/")
 def index():
     if current_user.is_authenticated:

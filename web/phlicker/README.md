@@ -4,7 +4,10 @@ Web 250(?)
 
 Listens on port 8268, can be changed by modifying the bind in `inner/docker-compose.yml` and the port number in `/setup.sh`.
 
-TODO: It should be safe to release everything in `inner/`, verify
+
+## Notes
+
+* Everything in `inner/` can be released
 
 
 ## Deployment
@@ -27,7 +30,7 @@ If you run this on some domain other than `red.chal.csaw.io`, update domain in `
 ## Solution
 
 * Find proxy/ssrf in resizer
-    * domain check can be bypassed since it doesn't check for trailing /, so you can do red.chal.csaw.io.yourdomain.whatever which redirects or resolves to registry
+    * domain check can be bypassed since it doesn't check port
 * Use above to get docker image from the local registry
 * Extract image and acquire flask signing key
 * sign auth cookie to see flag album
