@@ -18,5 +18,5 @@ for char in message:
 		elif a > value:
 			a -= 1
 			print("d", end="")
-	print("o")
+	print("o", end="")
 

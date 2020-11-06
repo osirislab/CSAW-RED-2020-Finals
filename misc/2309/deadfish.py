@@ -55,7 +55,7 @@ while True:
 			else:
 				acc = 0
 		if char in ['o', 'c']:
-			print(acc)
+			print(chr(acc), end="")
 		i += 1
 	prog = None
 	i = 0
