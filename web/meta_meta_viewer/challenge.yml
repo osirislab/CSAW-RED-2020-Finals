@@ -1,0 +1,36 @@
+# This file represents the base specification of your challenge. It is used by
+# other tools to install and deploy your challenge.
+
+# Required sections
+name: "very meta"
+author: "andrebhu"
+category: web
+description: Check out my new ec2 web service! It's pretty meta!
+value: 200
+type: standard
+
+# Settings used for Dockerfile deployment
+# If not used, remove or set to null
+# If you have a Dockerfile set to .
+# If you have an imaged hosted on Docker set to the image url (e.g. python/3.8:latest, registry.gitlab.com/python/3.8:latest)
+# Follow Docker best practices and assign a tag
+image: .
+
+# Flags specify answers that your challenge use. You should generally provide
+# at least one.
+# Can be removed if unused
+# Accepts strings or dictionaries
+flags:
+    - flag{thats_the_most_effective_tactic_available}
+    - thats_the_most_effective_tactic_available
+
+# Tags are used to classify your challenge with topics. You should provide at
+# least one.
+# Can be removed if unused
+# Accepts strings
+tags:
+    - Server Side Request Forgery
+
+# Specifies what version of the challenge specification was used.
+# Subject to change until ctfcli v1.0.0
+version: "0.1"

@@ -1,0 +1,4 @@
+gunicorn==19.10.0
+Flask==1.1.2
+Bootstrap-Flask==1.2.0
+requests==2.22.0

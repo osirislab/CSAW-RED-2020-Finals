@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "paths": {
+      "iam-security-credentials": "/latest/meta-data/iam/security-credentials/super-secret-admin-role",
+      "iam-security-credentials-role": "/latest/meta-data/iam/security-credentials"
+    },
+    "values": {
+      "iam-security-credentials-role": "super-secret-admin-role",
+      "iam-security-credentials": {
+          "Code": "Success",
+          "LastUpdated": "2020-04-02T18:50:40Z",
+          "Type": "AWS-HMAC",
+          "AccessKeyId": "12345678901",
+          "SecretAccessKey": "v/12345678901",
+          "Token": "flag{rip_cap1}",
+          "Expiration": "2020-04-02T00:49:51Z"
+      }
+    }
+  }
+}
