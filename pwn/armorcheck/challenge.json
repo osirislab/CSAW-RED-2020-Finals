@@ -6,6 +6,6 @@
     "flag":"flag{w4y_t0_7hr0w_d0wn_7h3_g4un7l3t}",
     "points":150,
     "files":["armorcheck"],
-    "box": "pwn.red.csaw.io",
+    "box": "red.chal.csaw.io",
     "internal_port": 5000
 }
