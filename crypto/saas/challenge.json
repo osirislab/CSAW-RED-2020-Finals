@@ -6,6 +6,6 @@
     "flag":"flag{h0cus_pocu5_form@T_+his_sTR1ng_fOr_7he_top_perc3nt}",
     "points":200,
     "files":["server.py"],
-    "box": "crypto.red.csaw.io",
+    "box": "chal.red.csaw.io",
     "internal_port": 5000
 }
