@@ -2,9 +2,9 @@
   "name": "Phlicker",
   "category": "web",
   "author": "kallsyms",
-  "description": "I see flame, phlickering once again... \n\n[http://{box}:{port}](http://{box}:{port})",
+  "description": "Check out my new photo sharing website!\n\n[http://{box}:{port}](http://{box}:{port})",
   "points": 250,
   "internal_port": 5000,
   "box": "red.chal.csaw.io",
-  "flag": "flag{this_is_a_flag}"
+  "flag": "flag{l3ts_g0_SSRFing_d0wn_by_th3_d0cks}"
 }
