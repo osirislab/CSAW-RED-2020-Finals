@@ -4,6 +4,7 @@ import crcmod
 import copy
 import uuid
 import json
+import binascii
 
 from flask import Flask, render_template, request, session
 
@@ -11,7 +12,7 @@ crc16 = crcmod.predefined.mkPredefinedCrcFun('crc-16')
 app = Flask(__name__)
 app.secret_key = 'asdfasdfasdfasdf'
 TABLE_BIT_SIZE = 4096
-FLAG = 'flag{asdfasdfasdfasdf}'
+FLAG = 'flag{w311_i_gue55_y0u_c4n_d0_a_fl1p}'
 TOO_MANY_CHANGES = 'errorstringtoomanychanges'
 MAX_CHANGE_COUNT = 8
 
@@ -25,10 +26,11 @@ class ScTable:
         self.table = self.generate_flipped_table(num_flips)
         self.crc_count = 0
         self.change_count = 0
+        self.length = len(self.target_table)
     
     def generate_flipped_table(self, num_flips):
         local = copy.deepcopy(self.target_table)
-        for i in range(num_flips):
+        for _ in range(num_flips):
             byte = random.randint(0,len(local)-1)
             bit = random.randint(0,7)
             flip_num = 1 << bit
@@ -38,7 +40,7 @@ class ScTable:
     def change_byte(self, index, b):
         self.change_count += 1
         try:
-            self.table[index] = b
+            self.table[index] = int(b)
         except:
             return False
         if self.change_count > MAX_CHANGE_COUNT:
@@ -53,6 +55,9 @@ class ScTable:
     
     def is_success(self):
         return self.table == self.target_table
+    
+    def get_target_table(self):
+        return binascii.hexlify(bytes(self.target_table)).decode('ascii')
 
 @app.route('/homepage')
 def homepage():
@@ -91,7 +96,7 @@ def get_target():
         print(table_holder)
         return json.dumps({"message":"You don't have a VALID session. Go to / and get one."})
     table = table_holder[uuid]
-    return json.dumps({"table":table.dump_target(), "length":table.length()})
+    return json.dumps({"table":table.get_target_table(), "length":table.length})
 
 @app.route('/change_byte', methods=['POST'])
 def change_byte():
@@ -107,7 +112,7 @@ def change_byte():
     value = data['value']
     status = table.change_byte(index, value)
     if status == TOO_MANY_CHANGES:
-        del table_holder[session['uuid']]
+        del table_holder[uuid]
         return json.dumps({"message":"Too many changes.  Goodbye."})
     if status:
         return json.dumps({"message":"Changed byte {} to {}".format(index, value)})
@@ -122,7 +127,7 @@ def crc_section():
         return json.dumps({"message":"You don't have a VALID session. Go to / and get one."})
     start = data['start']
     count = data['count']
-    table = table_holder[session['uuid']]
+    table = table_holder[uuid]
     try:
         crc = table.get_crc(start, count)
     except:
@@ -130,7 +135,5 @@ def crc_section():
     return json.dumps({"crc":crc, "start":start, "count":count, "message":"Successfully got CRC."})
 
 
-
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')
