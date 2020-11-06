@@ -1,0 +1,9 @@
+{
+  "name": "2309",
+  "category": "misc",
+  "description": "See relevant XKCD.",
+  "flag": "flag{dont_eat_deadfish}",
+  "points": 50,
+  "box": "red.chal.csaw.io",
+  "files": ["x.png", "x.txt"]
+}
