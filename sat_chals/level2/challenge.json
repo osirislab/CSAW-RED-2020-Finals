@@ -2,7 +2,7 @@
   "name": "Sat_2",
   "category": "rev",
   "author": "Marcus Barbu",
-  "description": "\n `nc {box} {port}`",
+  "description": "\n `http://{box}:{port}/homepage`",
   "points": 200,
   "internal_port": 5000,
   "box": "red.chal.csaw.io",
