@@ -2,9 +2,8 @@
   "name": "Phlicker",
   "category": "web",
   "author": "kallsyms",
-  "description": "Check out my new photo sharing website!\n\n[http://{box}:{port}](http://{box}:{port})",
+  "description": "Check out my new photo sharing website!\n\n[http://{box}:8268](http://{box}:8268)",
   "points": 250,
-  "internal_port": 8268,
   "box": "red.chal.csaw.io",
   "flag": "flag{l3ts_g0_SSRFing_d0wn_by_th3_d0ckers}"
 }
