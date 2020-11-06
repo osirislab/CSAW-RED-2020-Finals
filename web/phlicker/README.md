@@ -12,7 +12,7 @@ Listens on port 8268, can be changed by modifying the bind in `inner/docker-comp
 
 ## Deployment
 `./setup.sh` in this folder (_not_ inner) will setup docker-in-docker to deploy it
-`./reset.sh` quickly nukes everything setup setup
+`./reset.sh` quickly nukes everything
 
 registry binds to 5000 on host, ensure this is FW'd off
 
@@ -33,4 +33,4 @@ If you run this on some domain other than `red.chal.csaw.io`, update domain in `
     * domain check can be bypassed since it doesn't check port
 * Use above to get docker image from the local registry
 * Extract image and acquire flask signing key
-* sign auth cookie to see flag album
+* sign flask-login auth cookie to see flag album
