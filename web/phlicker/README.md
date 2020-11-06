@@ -14,7 +14,7 @@ Listens on port 8268, can be changed by modifying the bind in `inner/docker-comp
 `./setup.sh` in this folder (_not_ inner) will setup docker-in-docker to deploy it
 `./reset.sh` quickly nukes everything
 
-registry binds to 5000 on host, ensure this is FW'd off
+registry binds to 9000 on host, ensure this is FW'd off
 
 If you run this on some domain other than `red.chal.csaw.io`, update domain in `/setup.sh`, `/inner/setup.sh`, and `/inner/config.py`
 

