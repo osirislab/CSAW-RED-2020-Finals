@@ -26,3 +26,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.resizer.rule=Path(`/resize`)"
       - "traefik.http.routers.resizer.entrypoints=web"
+
+networks:
+  default:
+    external:
+      name: bridge
