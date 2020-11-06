@@ -1,0 +1,10 @@
+{
+  "name": "Sat_2",
+  "category": "rev",
+  "author": "Marcus Barbu",
+  "description": "\n `nc {box} {port}`",
+  "points": 200,
+  "internal_port": 5000,
+  "box": "red.chal.csaw.io",
+  "flag": "flag{gr0und_c0ntr01_2_mJ0r_T0m_c0mmenc1nG_c0und0wn_3ngin3s_0n}"
+}
