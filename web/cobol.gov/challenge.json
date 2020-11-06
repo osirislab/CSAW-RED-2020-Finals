@@ -1,0 +1,11 @@
+{
+  "name": "cobol.gov",
+  "category": "web",
+  "author": "wabscale",
+  "description": "The state of Connecticut hired me to make their new DMV website. Can you believe they are making me write it in cobol? Here's what I have so far. (flag is at /flag.txt)\n(compiled with gnucobol, not open-cobol) \n\n [http://{box}:{port}](http://{box}:{port})",
+  "points": 100,
+  "internal_port": 5000,
+  "files": ["main.cobol"],
+  "box": "red.chal.csaw.io",
+  "flag": "flag{all_the_cool_kids_know_cobol}"
+}

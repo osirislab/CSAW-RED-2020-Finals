@@ -4,124 +4,91 @@
       ENVIRONMENT DIVISION.
          INPUT-OUTPUT SECTION.
          FILE-CONTROL.
-           SELECT REQUEST ASSIGN TO IN-FILE
-           ORGANIZATION IS LINE SEQUENTIAL
-           ACCESS MODE IS SEQUENTIAL.
-
            SELECT RESPONSE ASSIGN TO OUT-FILE
            ORGANIZATION IS LINE SEQUENTIAL
            ACCESS MODE IS SEQUENTIAL
-           FILE STATUS RES-STATUS.
+           FILE STATUS WS-RES-STATUS.
 
       DATA DIVISION.
        FILE SECTION.
-       FD REQUEST.
-       01 REQLINE PIC X(128).
-
        FD RESPONSE.
-       01 RESLINE PIC X(10).
+       01 RESLINE PIC X(512).
 
          WORKING-STORAGE SECTION.
-       01    WS-EOF PIC A(1)  VALUE "N".
+       01 WS-EOF PIC A(1)  VALUE "N".
        01 WS-HEADER.
              05 HEADER-KEY PIC X(32).
              05 HEADER-VALUE PIC X(32).
        01 WS-REQUEST.
            05 REQUEST-METHOD PIC X(10).
-           05 REQUEST-LOCATION PIC X(10).
+           05 REQUEST-LOCATION PIC X(32).
            05 REQUEST-PROTO PIC X(10).
-       01 LOCATION-LEN PIC 9(1).
-       01 INDEX-STR PIC X(10) VALUE "index.html".
+       01 WS-LOCATION-LEN PIC 9(8) VALUE 0.
+       01 WS-INDEX-STR PIC X(10) VALUE "index.html".
 
-       01 RES-STATUS   PIC X(2).
-           88 RES-ALREADY-OPEN   VALUE '41'.
-       01 REQ-LINE PIC X(32).
+       01 WS-RES-STATUS   PIC X(2).
+           88 WS-RES-ALREADY-OPEN   VALUE '41'.
+       01 WS-REQ-LINE PIC X(2048).
        01 EOF PIC X(1) VALUE X"1A".
+       01 CR PIC X(1) VALUE X"0D".
 
       PROCEDURE DIVISION.
-       MOVE '/dev/tty' TO IN-FILE.
        GO TO READ-IN.
        STOP RUN.
 
        READ-IN.
-           ACCEPT REQ-LINE.
-           IF REQ-LINE IS NOT EQUAL TO EOF
-               THEN GO TO PARSE-REQ
-               ELSE UNSTRING REQLINE DELIMITED BY SPACE
-                   INTO REQUEST-METHOD, REQUEST-LOCATION, REQUEST-PROTO
-               END-UNSTRING
+           ACCEPT WS-REQ-LINE.
+           IF WS-REQ-LINE IS NOT EQUAL TO EOF
+               THEN UNSTRING WS-REQ-LINE DELIMITED BY SPACE
+                    INTO REQUEST-METHOD, REQUEST-LOCATION, REQUEST-PROTO
+                    END-UNSTRING
+               ELSE GO TO PARSE-REQ
            END-IF.
 
        LOOP.
-           ACCEPT REQ-LINE.
-           DISPLAY REQ-LINE.
-           IF REQ-LINE IS NOT EQUAL TO EOF
-               THEN GO TO PARSE-REQ
-               ELSE UNSTRING REQLINE DELIMITED BY SPACE
-                   INTO HEADER-KEY, HEADER-VALUE END-UNSTRING
+           ACCEPT WS-REQ-LINE.
+           IF WS-REQ-LINE IS NOT EQUAL TO CR
+               THEN UNSTRING WS-REQ-LINE DELIMITED BY SPACE
+                    INTO HEADER-KEY, HEADER-VALUE END-UNSTRING
+               ELSE GO TO PARSE-REQ
            END-IF.
            GO TO LOOP.
 
        PARSE-REQ.
-           *> OPEN INPUT REQUEST.
-           *> READ REQUEST INTO REQLINE
-           *>     NOT AT END UNSTRING REQLINE DELIMITED BY SPACE
-           *>         INTO REQUEST-METHOD, REQUEST-LOCATION, REQUEST-PROTO
-           *>         END-UNSTRING
-           *> END-READ
-
-           *> PERFORM UNTIL WS-EOF='Y'
-           *>     READ REQUEST INTO REQLINE
-           *>         AT END MOVE 'Y' TO WS-EOF
-           *>         NOT AT END UNSTRING REQLINE DELIMITED BY SPACE
-           *>             INTO HEADER-KEY, HEADER-VALUE
-           *>     END-READ
-           *> END-PERFORM.
-           *> CLOSE REQUEST.
-
-           *> DISPLAY "METHOD: " REQUEST-METHOD.
-           *> DISPLAY "LOCATION: " REQUEST-LOCATION.
-           *> DISPLAY "PROTO: " REQUEST-PROTO.
-           *> DISPLAY "KEY: " HEADER-KEY.
-           *> DISPLAY "VALUE: " HEADER-VALUE.
-
-           UNSTRING REQUEST-LOCATION DELIMITED BY '/'
-           INTO REQUEST-LOCATION.
-
            INSPECT REQUEST-LOCATION
-           TALLYING LOCATION-LEN FOR ALL CHARACTERS.
+           TALLYING WS-LOCATION-LEN FOR ALL CHARACTERS BEFORE SPACE.
 
-           IF LOCATION-LEN=0 THEN
-               STRING REQUEST-LOCATION DELIMITED BY SPACE
-               INDEX-STR DELIMITED BY SIZE
-               INTO REQUEST-LOCATION
-               END-STRING
+           IF WS-LOCATION-LEN=1 THEN
+               MOVE WS-INDEX-STR TO OUT-FILE
+           ELSE
+               MOVE REQUEST-LOCATION(2:WS-LOCATION-LEN - 1)
+               TO OUT-FILE
            END-IF.
 
-           *> DISPLAY "LOC: " REQUEST-LOCATION.
-           *> DISPLAY "LEN: " LOCATION-LEN.
-
-           MOVE REQUEST-LOCATION TO OUT-FILE.
-
            OPEN INPUT RESPONSE.
-           IF RES-STATUS <> '00' THEN
-               DISPLAY "YEET TABLE NOT FOUND"
-               EXIT
+           IF WS-RES-STATUS <> '00' THEN
+               DISPLAY "YEET FILE NOT FOUND"
+               GO TO PROG-END
            END-IF
 
-           DISPLAY "HTTP/1.1 200 OK" X"0D".
-           DISPLAY "Content-Type: text/html" X"0D".
-           DISPLAY "Connection: close" X"0D".
-           DISPLAY X"0D".
-           DISPLAY X"0D".
+           DISPLAY "HTTP/1.1 200 OK" CR.
+           IF OUT-FILE="css/styles.css"
+               DISPLAY "Content-Type: text/css" CR
+           ELSE
+               DISPLAY "Content-Type: text/html" CR
+           END-IF.
+           DISPLAY "Connection: close" CR.
+           DISPLAY CR.
+           DISPLAY CR.
 
            MOVE 'N' TO WS-EOF.
            PERFORM UNTIL WS-EOF='Y'
                READ RESPONSE INTO RESLINE
                    AT END MOVE 'Y' TO WS-EOF
-                   NOT AT END DISPLAY RESLINE X"0D"
+                   NOT AT END DISPLAY RESLINE WITH NO ADVANCING
                END-READ
            END-PERFORM.
 
+       PROG-END.
            CLOSE RESPONSE.
 
