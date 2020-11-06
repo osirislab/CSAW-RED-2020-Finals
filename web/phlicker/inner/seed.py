@@ -28,6 +28,6 @@ if __name__ == "__main__":
     db.session.add(flag_album)
     db.session.commit()
 
-    photo = Photo(album_id=flag_album.id, url="TODO: URL TO IMAGE OF FLAG")
+    photo = Photo(album_id=flag_album.id, url=f"http://{sys.argv[1]}/static/photos/flag1.png")
     db.session.add(photo)
     db.session.commit()
