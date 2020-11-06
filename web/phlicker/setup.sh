@@ -3,7 +3,7 @@
 set -ueo pipefail
 
 SECRET_KEY="uEWnxmVIamGhVaG4Zi6nfZMFMiEtax73"
-DOMAIN="web.chal.csaw.io:8268"
+DOMAIN="red.chal.csaw.io:8268"
 
 docker run \
     -it \

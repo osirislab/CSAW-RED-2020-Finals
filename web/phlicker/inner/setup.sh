@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #REGISTRY="localhost:5000"
-REGISTRY="web.chal.csaw.io:5000"
+REGISTRY="red.chal.csaw.io:5000"
 
 if ! docker ps | grep -q registry; then
     docker run -d -p 5000:5000 --restart=always --name registry registry:2

@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   traefik:
-    image: "web.chal.csaw.io:5000/traefik:v2.3"
+    image: "red.chal.csaw.io:5000/traefik:v2.3"
     container_name: "traefik"
     command:
       - "--providers.docker=true"
@@ -14,14 +14,14 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
   
   frontend:
-    image: "web.chal.csaw.io:5000/frontend:latest"
+    image: "red.chal.csaw.io:5000/frontend:latest"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Path(`/`) || PathPrefix(`/album`) || PathPrefix(`/static`)"
       - "traefik.http.routers.frontend.entrypoints=web"
   
   resizer:
-    image: "web.chal.csaw.io:5000/resizer:latest"
+    image: "red.chal.csaw.io:5000/resizer:latest"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.resizer.rule=Path(`/resize`)"
