@@ -15,5 +15,5 @@ RUN chown -R 1001:1001 /opt/app/ && \
     chmod +x /usr/bin/ec2-metadata-mock-linux-amd64
 
 USER 1001
-EXPOSE 8000
+
 ENTRYPOINT ["/opt/app/serve.sh"]

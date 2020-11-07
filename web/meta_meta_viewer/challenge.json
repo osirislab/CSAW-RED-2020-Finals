@@ -4,7 +4,7 @@
 	"category":"web",
 	"description":"Check out my new ec2 web service! It's pretty meta! \n\n [http://{box}:{port}](http://{box}:{port})",
 	"points":200,
-	"internal_port":5000,
+	"internal_port":8000,
 	"files":["src/app.py"],
 	"box":"red.chal.csaw.io",
 	"flag":"flag{thats_the_most_effective_tactic_available}"
