@@ -1,0 +1,11 @@
+{
+    "name":"thetrial",
+    "category":"pwn",
+    "author": "N4T_20",
+    "description":"The final trial is upon you! `nc {box} {port}`",
+    "flag":"flag{5hr1nk_4_chunk_but_n3v3r_5hr1nk_fr0m_4_ch4ll3ng3}",
+    "points":250,
+    "files":["thetrial", "libc-2.27.so"],
+    "box": "red.chal.csaw.io",
+    "internal_port": 5000
+}

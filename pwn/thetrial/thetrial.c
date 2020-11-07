@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define NPAGES 40
+#define NPAGES 60
 #define MAXINPUTSIZE 1024
 #define NAMELENGTH 16
 
@@ -21,7 +21,6 @@ spell * spellbook[NPAGES];
 
 int getFreeSpell(){
     for (int i = 0; i < NPAGES; i++){
-        //printf("In getFreeSpell(): i = %d", i);
         if(spellbook[i] == 0){
             return i;
         }
@@ -34,9 +33,8 @@ int getFreeSpell(){
 void createSpell(char * name, int length){
     int index = getFreeSpell();
     spellbook[index] = malloc(sizeof(spell));
-    //printf("Got a free index: %d.",index); // TODO: delete this
     //int length = strlen(name);
-    printf("Creating spell named %s with length %d at index %d", name, length, index);
+    //printf("Creating spell named %s with length %d at index %d", name, length, index);
     spellbook[index]->nameLength = length;
     //int incantationLength = strlen(incantation);
     spellbook[index]->name = malloc(length);
@@ -87,13 +85,14 @@ void displaySpells(){
     //spellcounter = 0;
     for (int i = 0; i < NPAGES; i++){
         if(spellbook[i] != 0){
-            printf("%d) Spell: %s\n", i, spellbook[i]->name);
-            printf("    Spell length: %ld for the strlen but the stored integer is %d \n", strlen(spellbook[i]->name), spellbook[i]->nameLength);//, strlen(spellbook[i]->incantation));
+            printf("%d) %s\n", i, spellbook[i]->name);
+            //printf("    Spell length: %ld for the strlen but the stored integer is %d \n", strlen(spellbook[i]->name), spellbook[i]->nameLength);//, strlen(spellbook[i]->incantation));
             //printf("%d) Spell: %s\n    %s\n", i, spellbook[i]->name, spellbook[i]->incantation);
             //printf("    Spell length: %ld and incantation length: %ld\n", strlen(spellbook[i]->name), strlen(spellbook[i]->incantation));
             //spellcounter += 1;
         }
     }
+    puts("");
     //roundComplete();
 }
 
@@ -119,9 +118,10 @@ char getMenuSelection(){
 }
 
 int getInt(){
-    char input[5]; 
-    getInput(5, input);
-    return atoi(input);
+    char input[10]; 
+    getInput(10, input);
+    int result = atoi(input);
+    return result;
 }
 
 int spellIndexIsValid(int index){
@@ -136,7 +136,7 @@ void castSpell(){
         //printf("You cast the %s spell, chanting \'%s!\'\n", spellbook[index]->name, spellbook[index]->incantation);
         printf("You cast the %s spell!\n", spellbook[index]->name);
         puts("The magic fizzles against the anti-magic field, but at least it sounded cool.");
-        puts("The spell fades from your spellbook.");
+        puts("The spell fades from your spellbook.\n");
         free(spellbook[index]->name);
         //free(spellbook[index]->incantation);
         free(spellbook[index]);
@@ -169,14 +169,27 @@ void combineSpells(){
     if(spellIndexIsValid(index1) && spellIndexIsValid(index2)){
         int len1 = spellbook[index1]->nameLength;
         int len2 = spellbook[index2]->nameLength;
-        char * newName = combineTwoNames(spellbook[index1]->name, spellbook[index2]->name, len1, len2);
+        //char * newName = combineTwoNames(spellbook[index1]->name, spellbook[index2]->name, len1, len2);
         //char * newIncantation = combineTwoFields(spellbook[index1]->incantation, spellbook[index2]->incantation);
-        createSpell(newName, (len1 + len2));
-        free(newName);
+        //createSpell(newName, (len1 + len2));
+        //free(newName);
         //free(newIncantation);
-        puts("The two spells merge to create a new one on an empty page of your spellbook.");
+        int newSpellIndex = getFreeSpell();
+        spellbook[newSpellIndex] = malloc(sizeof(spell));
+        //printf("Got a free index: %d.",index); // TODO: delete this
+        //int length = strlen(name);
+        
+        spellbook[newSpellIndex]->nameLength = (len1 + len2);
+        //int incantationLength = strlen(incantation);
+        spellbook[newSpellIndex]->name = malloc(len1 + len2);
+        strncpy(spellbook[newSpellIndex]->name, spellbook[index1]->name, len1);
+        strncpy(&(spellbook[newSpellIndex]->name[len1]), spellbook[index2]->name, len2);
+        spellbook[newSpellIndex]->name[(len1+len2)] = '\x00';
+        //printf("In combineSpells: creating spell named %s with length %d at index %d", spellbook[newSpellIndex]->name, (len1 + len2), newSpellIndex);
+        //strncpy(spellbook[index]->name, name, length);
+        puts("The two spells merge to create a new one on an empty page of your spellbook.\n");
     }else{
-        printf("One or more of your spell indices is invalid. Nothing happens.");
+        printf("One or more of your spell indices is invalid. Nothing happens.\n");
     }
     //roundComplete();
     return;
@@ -193,7 +206,7 @@ void modifySpell(){
         int length = spellbook[index]->nameLength;
         read(STDIN_FILENO, spellbook[index]->name, length);
         spellbook[index]->name[length] = '\x00';
-        puts("Spellbook entry updated.");
+        puts("Spellbook entry updated.\n");
     }else{
         printf("Incorrect index or the spell there has been cast already!\n");
     }
