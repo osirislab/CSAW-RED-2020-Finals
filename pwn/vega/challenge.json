@@ -1,7 +1,7 @@
 {
     "name":"vega",
     "category":"pwn",
-    "description":"Can you make it past the gates of hell, Doom Slayer?`",
+    "description":"Can you make it past the gates of hell, Doom Slayer? `nc {box} {port}`",
     "flag":"flag{Y3ll0WK3Y_Gr33NK3Y_Blu3K3Y_Purpl3K3Y!}",
     "points":100,
     "files":["vega"],
