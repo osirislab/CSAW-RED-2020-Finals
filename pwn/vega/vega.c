@@ -46,7 +46,7 @@ void gonna(int gate) {
         exit(1);
     }
     
-    printf("Part: ");
+    printf("Part 1: ");
     printf("%s", content);
     fflush(stdout);
     printf("\n\n\n\n");
@@ -55,7 +55,7 @@ void gonna(int gate) {
     printf("That's ok, slayer! Surely you won't get past the marauder...\n");
     
     read(fp,content,128);
-    printf("\n\n\nPart: ");
+    printf("\n\n\nPart 2: ");
     printf("%s", content);
     fflush(stdout);
     printf("\n\n\n\n");
@@ -79,7 +79,7 @@ void give(int gate1, int gate2) {
     }
 
     read(fp,content,128);
-    printf("Part: ");
+    printf("Part 3: ");
     printf("%s", content);
     fflush(stdout);
     printf("\n\n\n\n");
@@ -116,7 +116,7 @@ void you(int c1, int c2, int c3, int c4) {
     }
     
     read(fp,content,128);
-    printf("Part: ");
+    printf("Part 4: ");
     printf("%s", content);
     fflush(stdout);
     printf("\n\n\n\n");
