@@ -2,7 +2,7 @@
   "name": "Sat_1",
   "category": "web",
   "author": "Marcus Barbu",
-  "description": "The communication period with your satellite will end in 3 minutes, but the flag won't print for another 6. If only there were some way to buy more time... \n\n[http://{box}:{port}](http://{box}:{port})",
+  "description": "The communication period with your satellite will end in 3 minutes, but the flag won't print for another 6. If only there were some way to buy more time... \n\n[http://{box}:{port}](http://{box}:{port})\n  Hint (update 5:05pm Saturday): this challenge uses an encoding scheme at some point that is a simple xor of two pieces of information you already have.",
   "points": 200,
   "internal_port": 5000,
   "box": "red.chal.csaw.io",
